@@ -1,0 +1,7 @@
+
+- meds.each do |med|
+
+    p = "#{med["id"]}:"
+    p = "#{med["name"]} price:#{med["price"]} stock:#{med["stock"]}"
+    form method="POST" action="cart/add"
+        input type="submit" value="Add"
