@@ -6,12 +6,27 @@ require 'bcrypt'
 
 enable :sessions
 
+
 get ('/') do
+  session[:user_id] = 1 #session[:id].to_i
+  # @user_id = 1 #session[:id].to_i
   db = SQLite3::Database.new('db/db.db')
   db.results_as_hash = true
   meds = db.execute("SELECT * FROM meds") # WHERE id = ?",id)
-  p meds
-  slim(:home, locals:{meds:meds})
+  cart = db.execute("SELECT * FROM cart") # WHERE id = ?",id)
+  p cart
+  # p meds
+  slim(:home, locals:{meds:meds, cart:cart})
+end
+
+get ('/cart') do
+  db = SQLite3::Database.new('db/db.db')
+  db.results_as_hash = true
+  meds = db.execute("SELECT * FROM meds") # WHERE id = ?",id)
+  cart = db.execute("SELECT * FROM cart") # WHERE id = ?",id)
+  # cart = db.execute("SELECT * FROM cart INNER JOIN cart.med_id = meds.id WHERE user_id = ?", session[:user_id]) # WHERE id = ?",id)
+  # p cart
+  slim(:cart, locals:{meds:meds, cart:cart})
 end
 
 get ('/signup') do
@@ -48,7 +63,14 @@ post ('/newmed/confirm') do
 end
 
 post ('/cart/add') do
-  user_id = 1 #session[:id].to_i
+  med_id = params[:id]
+  number = params[:antal].to_i
+  p med_id
   db = SQLite3::Database.new('db/db.db')
-  db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [user_id, med_id])
+  i = 0
+  while i < number
+    db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
+    i += 1
+  end
+  redirect('/')
 end

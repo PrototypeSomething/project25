@@ -1,0 +1,46 @@
+
+- total_price = 0
+- meds.each do |med|
+    - i = 0
+    - cart.each do |cart|
+        - if (cart["med_id"].to_i == med["id"].to_i)
+            - if (cart["user_id"].to_i == session[:user_id])
+                - i += 1
+                - total_price += med["price"].to_i
+
+    / # Only print if the user has at least one of this medication in their cart
+    - if i > 0
+        / p = "#{med["id"]}:"  # Keep this line if you want the ID displayed
+        p = "cart: #{i}"
+        p = "#{med["name"]} price:#{med["price"]} stock:#{med["stock"]}"
+        p = "price #{med["price"].to_i * i}"
+        
+p = "total price: #{total_price}"
+
+
+
+/ WIP!!!-------------------------------------------------------------------------------!!!
+form method="POST" action="cart/add"
+        / input type="b" name="antal"
+        / input type="hidden" name="med" value=med["id"]
+        / input type="hidden" name="number" value=med["id"]
+        / input type="hidden" name="id" value=med["id"]
+        / input type="hidden" name="id" value=med["id"]
+        input type="submit" value="Buy"
+
+
+/ - meds.each do |med|
+
+/     p = "#{med["id"]}:"
+/     - i = 0
+/     - cart.each do |cart|
+/         / p = "#{cart["user_id"].to_i}"
+/         / p = "#{@user_id}"
+/         - if (cart["med_id"].to_i == med["id"].to_i)
+/             / p = cart["med_id"]
+/             / p = med["id"]
+/             - if (cart["user_id"].to_i == session[:user_id])
+/                 - i += 1
+/     p = "cart: #{i}"
+/     p = "#{med["name"]} price:#{med["price"]} stock:#{med["stock"]}"
+/     p = "total price #{med["price"].to_i * i}"
