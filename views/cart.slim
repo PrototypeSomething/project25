@@ -1,12 +1,18 @@
 
 - total_price = 0
+- @j = Array.new(meds.length, 0)
+/ - puts @j
+- j = 0
+/ - puts j
 - meds.each do |med|
     - i = 0
     - cart.each do |cart|
         - if (cart["med_id"].to_i == med["id"].to_i)
             - if (cart["user_id"].to_i == session[:user_id])
                 - i += 1
+                - @j[j] += 1
                 - total_price += med["price"].to_i
+    - j += 1
 
     / # Only print if the user has at least one of this medication in their cart
     - if i > 0
@@ -17,12 +23,14 @@
         
 p = "total price: #{total_price}"
 
-
+/ p = @j[0]
+/ - puts @j
+/ - puts j
 
 / WIP!!!-------------------------------------------------------------------------------!!!
-form method="POST" action="cart/add"
-        / input type="b" name="antal"
-        / input type="hidden" name="med" value=med["id"]
+form method="POST" action="cart/buy"
+        input type="hidden" name="antal" value=@j
+        / input type="hidden" name="total_price" value=
         / input type="hidden" name="number" value=med["id"]
         / input type="hidden" name="id" value=med["id"]
         / input type="hidden" name="id" value=med["id"]

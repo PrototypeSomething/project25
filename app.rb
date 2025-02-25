@@ -3,6 +3,7 @@ require 'slim'
 require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
+require_relative "model.rb"
 
 enable :sessions
 
@@ -73,4 +74,19 @@ post ('/cart/add') do
     i += 1
   end
   redirect('/')
+end
+
+post ('/cart/buy') do
+  meds = params[:antal]
+  # number = params[:antal].to_i
+  puts meds
+  # buy(meds)
+
+  # db = SQLite3::Database.new('db/db.db')
+  # i = 0
+  # while i < number
+  #   db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
+  #   i += 1
+  # end
+  redirect('/cart')
 end
