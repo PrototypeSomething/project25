@@ -1,6 +1,7 @@
 
 - total_price = 0
 - @j = Array.new(meds.length, 0)
+- @med_id = Array.new(meds.length, 0)
 / - puts @j
 - j = 0
 / - puts j
@@ -10,7 +11,11 @@
         - if (cart["med_id"].to_i == med["id"].to_i)
             - if (cart["user_id"].to_i == session[:user_id])
                 - i += 1
+                / - puts "i #{i}"
                 - @j[j] += 1
+                - if @med_id[j] != med["id"].to_i
+                    / - p j
+                    - @med_id[j] = med["id"].to_i
                 - total_price += med["price"].to_i
     - j += 1
 
@@ -22,7 +27,8 @@
         p = "price #{med["price"].to_i * i}"
         
 p = "total price: #{total_price}"
-
+p = @j
+p = @med_id
 / p = @j[0]
 / - puts @j
 / - puts j
@@ -30,7 +36,7 @@ p = "total price: #{total_price}"
 / WIP!!!-------------------------------------------------------------------------------!!!
 form method="POST" action="cart/buy"
         input type="hidden" name="antal" value=@j
-        / input type="hidden" name="total_price" value=
+        input type="hidden" name="med_id" value=@med_id
         / input type="hidden" name="number" value=med["id"]
         / input type="hidden" name="id" value=med["id"]
         / input type="hidden" name="id" value=med["id"]

@@ -1,15 +1,17 @@
 require 'sinatra'
 require 'slim'
 require 'sqlite3'
+require 'sinatra/flash'
 require 'sinatra/reloader'
 require 'bcrypt'
 require_relative "model.rb"
+require_relative "logic.rb"
 
 enable :sessions
 
 
 get ('/') do
-  session[:user_id] = 1 #session[:id].to_i
+  session[:user_id] = 2 #session[:id].to_i
   # @user_id = 1 #session[:id].to_i
   db = SQLite3::Database.new('db/db.db')
   db.results_as_hash = true
@@ -77,10 +79,17 @@ post ('/cart/add') do
 end
 
 post ('/cart/buy') do
-  meds = params[:antal]
+  meds = to_array(params[:antal])
+  med_id = to_array(params[:med_id])
   # number = params[:antal].to_i
-  puts meds
-  # buy(meds)
+  # puts med_id
+  # p meds
+  # puts meds
+  # p med_id
+  
+  db = SQLite3::Database.new('db/db.db')
+
+  buy(db, meds, med_id)
 
   # db = SQLite3::Database.new('db/db.db')
   # i = 0
