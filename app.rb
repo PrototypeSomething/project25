@@ -11,8 +11,7 @@ enable :sessions
 
 
 get ('/') do
-  session[:user_id] = 2 #session[:id].to_i
-  # @user_id = 1 #session[:id].to_i
+  session[:user_id] = 1 #session[:id].to_i
   db = SQLite3::Database.new('db/db.db')
   db.results_as_hash = true
   meds = db.execute("SELECT * FROM meds") # WHERE id = ?",id)
@@ -34,6 +33,13 @@ end
 
 get ('/signup') do
   slim(:signup)
+end
+
+get ('/account') do
+  db = SQLite3::Database.new('db/db.db')
+  meds = db.execute("SELECT * FROM meds")
+  previously_bought = (db.execute("SELECT * FROM previously_bought"))
+  slim(:account, locals:{previously_bought:previously_bought, meds:meds})
 end
 
 post('/users/new') do
