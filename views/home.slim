@@ -14,6 +14,6 @@
                 - i += 1
     p = "cart: #{i}"
     form method="POST" action="cart/add"
-        input type="number" name="antal"
+        input type="number" name="antal" min="0" max=(med["stock"]-i)
         input type="hidden" name="id" value=med["id"]
         input type="submit" value="Add"

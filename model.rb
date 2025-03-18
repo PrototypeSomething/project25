@@ -23,7 +23,7 @@ def buy(db, array, med_id)
         end
       end
       if !bought
-        # puts "adding to db"
+        # put<s "adding to db"
         db.execute('INSERT INTO previously_bought (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
       end
 
@@ -33,4 +33,5 @@ def buy(db, array, med_id)
     # puts array[i]
     i += 1
   end
+  db.execute('DELETE FROM cart WHERE user_id = ?', session[:user_id])
 end

@@ -81,6 +81,7 @@ post ('/cart/add') do
     db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
     i += 1
   end
+  flash[:notice] = "Aja baja din lilla jävel"
   redirect('/')
 end
 
