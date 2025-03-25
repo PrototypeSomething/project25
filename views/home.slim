@@ -1,19 +1,21 @@
 
-- meds.each do |med|
-
-    p = "#{med["id"]}:"
-    p = "#{med["name"]} price:#{med["price"]} stock:#{med["stock"]}"
-    - i = 0
-    - cart.each do |cart|
-        / p = "#{cart["user_id"].to_i}"
-        / p = "#{@user_id}"
-        - if (cart["med_id"].to_i == med["id"].to_i)
-            / p = cart["med_id"]
-            / p = med["id"]
-            - if (cart["user_id"].to_i == session[:user_id])
-                - i += 1
-    p = "cart: #{i}"
-    form method="POST" action="cart/add"
-        input type="number" name="antal" min="0" max=(med["stock"]-i)
-        input type="hidden" name="id" value=med["id"]
-        input type="submit" value="Add"
+h1 id = "home_header" = "Home"
+div id = "home"
+    - meds.each do |med|
+        div class = "med_block"
+            p = "#{med["name"]}"
+            p = "price:#{med["price"]} stock:#{med["stock"]}"
+            - i = 0
+            - cart.each do |cart|
+                / p = "#{cart["user_id"].to_i}"
+                / p = "#{@user_id}"
+                - if (cart["med_id"].to_i == med["id"].to_i)
+                    / p = cart["med_id"]
+                    / p = med["id"]
+                    - if (cart["user_id"].to_i == session[:user_id])
+                        - i += 1
+            p = "cart: #{i}"
+            form class="number-form" method="POST" action="cart/add"
+                input type="number" name="antal" min=(-i) max=(med["stock"]-i)
+                input type="hidden" name="id" value=med["id"]
+                input type="submit" value="Add"

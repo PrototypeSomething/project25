@@ -1,5 +1,8 @@
-- previously_bought.each do |prev|
-    - if prev[0] == session[:user_id]
-        - meds.each do |meds|
-            - if meds[0] == prev[1]
-                p = "#{meds[1]}: #{meds[4]}"
+div id="account"
+    h1 = "Previously bought"
+    div id = "prev_bought"
+        - previously_bought.each do |prev|
+            - if prev[0] == session[:user_id]
+                - meds.each do |meds|
+                    - if meds[0] == prev[1]
+                        p = "#{meds[1]}: #{meds[4]}"

@@ -76,10 +76,23 @@ post ('/cart/add') do
   number = params[:antal].to_i
   p med_id
   db = SQLite3::Database.new('db/db.db')
+  db.results_as_hash = true
   i = 0
-  while i < number
-    db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
-    i += 1
+  if number >= 0
+    while i < number
+      db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
+      i += 1
+    end
+  elsif number < 0
+    # while i > number
+      # db.execute('INSERT INTO cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
+      p duplicates = db.execute('SELECT id FROM cart WHERE user_id = ? AND med_id = ? LIMIT ?', [session[:user_id], med_id, number.abs])
+      # db.execute('DELETE FROM cart (user_id, med_id) VALUES (?,?)', [session[:user_id], med_id])
+      duplicates.each do |row|
+        db.execute('DELETE FROM cart WHERE id = ?', [row['id'].to_i])
+      end
+      i -= 1
+    # end
   end
   flash[:notice] = "Aja baja din lilla jävel"
   redirect('/')

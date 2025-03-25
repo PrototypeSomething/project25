@@ -5,30 +5,39 @@
 / - puts @j
 - j = 0
 / - puts j
-- meds.each do |med|
-    - i = 0
-    - cart.each do |cart|
-        - if (cart["med_id"].to_i == med["id"].to_i)
-            - if (cart["user_id"].to_i == session[:user_id])
-                - i += 1
-                / - puts "i #{i}"
-                - @j[j] += 1
-                - if @med_id[j] != med["id"].to_i
-                    / - p j
-                    - @med_id[j] = med["id"].to_i
-                - total_price += med["price"].to_i
-    - j += 1
+div id = "cart"
+    h1 id = "cart_header" = "Cart"
+    - meds.each do |med|
+        - i = 0
+        - cart.each do |cart|
+            - if (cart["med_id"].to_i == med["id"].to_i)
+                - if (cart["user_id"].to_i == session[:user_id])
+                    - i += 1
+                    / - puts "i #{i}"
+                    - @j[j] += 1
+                    - if @med_id[j] != med["id"].to_i
+                        / - p j
+                        - @med_id[j] = med["id"].to_i
+                    - total_price += med["price"].to_i
+        - j += 1
 
-    / # Only print if the user has at least one of this medication in their cart
-    - if i > 0
-        / p = "#{med["id"]}:"  # Keep this line if you want the ID displayed
-        p = "cart: #{i}"
-        p = "#{med["name"]} price:#{med["price"]} stock:#{med["stock"]}"
-        p = "price #{med["price"].to_i * i}"
+        / # Only print if the user has at least one of this medication in their cart
+        - if i > 0
+            / p = "#{med["id"]}:"  # Keep this line if you want the ID displayed
+            div class = "med_block"
+                p = "#{med["name"]}"
+                p = "price:#{med["price"]} stock:#{med["stock"]}"
+                p = "cart: #{i}"
+                p = "total price #{med["price"].to_i * i}"
+            / p = "cart: #{i}"
+            / p = "#{med["name"]} price:#{med["price"]} stock:#{med["stock"]}"
+            / p = "price #{med["price"].to_i * i}"
         
-p = "total price: #{total_price}"
-p = @j
-p = @med_id
+    p id = "total_price" = "total price: #{total_price}"
+/ p = @j
+/ p = @med_id
+
+
 / p = @j[0]
 / - puts @j
 / - puts j
