@@ -6,3 +6,9 @@ div id="account"
                 - meds.each do |meds|
                     - if meds[0] == prev[1]
                         p = "#{meds[1]}: #{meds[4]}"
+
+div id = "logout"
+    p = "Welcome #{session[:username]}!"
+    p = "Your ID is #{session[:user_id]}."
+    form method="POST" action="/logout"
+        input type="submit" value="Logout"

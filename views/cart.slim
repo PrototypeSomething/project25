@@ -34,6 +34,13 @@ div id = "cart"
             / p = "price #{med["price"].to_i * i}"
         
     p id = "total_price" = "total price: #{total_price}"
+    form method="POST" action="cart/buy"
+            input type="hidden" name="antal" value=@j
+            input type="hidden" name="med_id" value=@med_id
+            / input type="hidden" name="number" value=med["id"]
+            / input type="hidden" name="id" value=med["id"]
+            / input type="hidden" name="id" value=med["id"]
+            input type="submit" value="Buy"
 / p = @j
 / p = @med_id
 
@@ -43,13 +50,6 @@ div id = "cart"
 / - puts j
 
 / WIP!!!-------------------------------------------------------------------------------!!!
-form method="POST" action="cart/buy"
-        input type="hidden" name="antal" value=@j
-        input type="hidden" name="med_id" value=@med_id
-        / input type="hidden" name="number" value=med["id"]
-        / input type="hidden" name="id" value=med["id"]
-        / input type="hidden" name="id" value=med["id"]
-        input type="submit" value="Buy"
 
 
 / - meds.each do |med|

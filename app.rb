@@ -11,7 +11,7 @@ enable :sessions
 
 
 get ('/') do
-  session[:user_id] = 1 #session[:id].to_i
+  isLoggedIn()
   db = SQLite3::Database.new('db/db.db')
   db.results_as_hash = true
   meds = db.execute("SELECT * FROM meds") # WHERE id = ?",id)
@@ -22,12 +22,11 @@ get ('/') do
 end
 
 get ('/cart') do
+  isLoggedIn()
   db = SQLite3::Database.new('db/db.db')
   db.results_as_hash = true
   meds = db.execute("SELECT * FROM meds") # WHERE id = ?",id)
   cart = db.execute("SELECT * FROM cart") # WHERE id = ?",id)
-  # cart = db.execute("SELECT * FROM cart INNER JOIN cart.med_id = meds.id WHERE user_id = ?", session[:user_id]) # WHERE id = ?",id)
-  # p cart
   slim(:cart, locals:{meds:meds, cart:cart})
 end
 
@@ -35,7 +34,25 @@ get ('/signup') do
   slim(:signup)
 end
 
+get ('/login') do
+  slim(:login)
+end
+
+post ('/login') do
+  p params[:username]
+  p params[:password]
+  redirect(login_user(params[:username], params[:password]))
+end
+
+post ('/logout') do
+  session[:user_id] = nil
+  session[:admin] = nil
+  flash[:notice] = "You have been logged out."
+  redirect('/login')
+end
+
 get ('/account') do
+  isLoggedIn()
   db = SQLite3::Database.new('db/db.db')
   meds = db.execute("SELECT * FROM meds")
   previously_bought = (db.execute("SELECT * FROM previously_bought"))
@@ -52,11 +69,12 @@ post('/users/new') do
     db.execute('INSERT INTO users (username,passw) VALUES (?,?)',[username,password_digest])
     redirect('/')
   else
-    "lösenorden matchade inte ):"
+    "Passwords didn't match ):"
   end
 end
 
 get ('/newmed') do
+  isLoggedIn()
   slim(:newmed)
 end
 

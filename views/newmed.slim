@@ -1,6 +1,23 @@
-form action="newmed/confirm" method="POST" 
-    input type="text" name="name" placeholder="Name"
-    input type="number" name="stock" placeholder="Stock"
-    input type="text" name="description" placeholder="Beskrivning"
-    input type="number" name="price" placeholder="Pris"
-    input type="submit" value="Lägg till"
+/ form action="newmed/confirm" method="POST" 
+/     input type="text" name="name" placeholder="Name"
+/     input type="number" name="stock" placeholder="Stock"
+/     input type="text" name="description" placeholder="Beskrivning"
+/     input type="number" name="price" placeholder="Pris"
+/     input type="submit" value="Lägg till"
+
+form action="newmed/confirm" method="POST"
+    h1 Add new medication
+    p
+        | Name:
+        input type="text" name="name" placeholder="Name"
+    p
+        | Stock:
+        input type="number" name="stock" placeholder="Stock"
+    p
+        | Description:
+        input type="text" name="description" placeholder="Description"
+    p
+        | Price:
+        input type="number" name="price" placeholder="Price"
+    p
+        input type="submit" value="Add medication"
