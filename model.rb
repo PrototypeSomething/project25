@@ -1,3 +1,16 @@
+# @!group Model
+
+##
+# Processes the purchase of medications.
+# Updates the stock in the database, adds items to the previously bought list,
+# and clears the user's cart.
+#
+# @param [SQLite3::Database] db The database connection.
+# @param [Array<Integer>] array The quantities of medications to purchase.
+# @param [Array<Integer>] med_id The IDs of the medications to purchase.
+# @return [void]
+#
+# @raise [RuntimeError] If there is not enough stock for a medication.
 def buy(db, array, med_id)
   # Fetch previously bought items for the user
   previously_bought = db.execute("SELECT * FROM previously_bought WHERE user_id = ?", session[:user_id])
@@ -36,6 +49,19 @@ def buy(db, array, med_id)
   db.execute('DELETE FROM cart WHERE user_id = ?', session[:user_id])
 end
 
+##
+# Logs in the user by verifying the username and password.
+# Sets session variables for the user and admin status.
+#
+# @param [String] username The username entered by the user.
+# @param [String] password The password entered by the user.
+# @return [String] The route to redirect to after login.
+#
+# @example Successful login
+#   login_user("john_doe", "password123") # => "/"
+#
+# @example Failed login
+#   login_user("john_doe", "wrong_password") # => "/login"
 def login_user(username, password)
   p username
   p password
@@ -44,7 +70,6 @@ def login_user(username, password)
   results = db.execute("SELECT * FROM users WHERE username = ?", [username])
   p !results.nil?
   p results
-  # p BCrypt::Password.new(password)
   p results[0]["passw"]
   if !results.nil?
       hashed_password = results[0]["passw"]
@@ -69,10 +94,38 @@ def login_user(username, password)
   end
 end
 
+##
+# Checks if the user is logged in.
+#
+# @return [Boolean] `true` if the user is logged in, `false` otherwise.
+#
+# @example
+#   loggedIn() # => true
+def loggedIn()
+  return !session[:user_id].nil?
+end
+
+##
+# Ensures the user is logged in.
+# Redirects to the login page if the user is not logged in.
+#
+# @return [void]
+#
+# @raise [Sinatra::NotFound] Redirects to `/login` if the user is not logged in.
 def isLoggedIn()
-  # Check if the user is logged in by checking if session[:user_id] is nil
   if session[:user_id].nil?
     flash[:notice] = "You must be logged in to access this page."
     redirect('/login')
   end
+end
+
+##
+# Checks if the user is an admin.
+#
+# @return [Boolean] `true` if the user is an admin, `false` otherwise.
+#
+# @example
+#   isAdmin() # => true
+def isAdmin()
+  return session[:admin] == true
 end

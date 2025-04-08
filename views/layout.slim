@@ -4,19 +4,26 @@ html lang="en"
         meta charset="UTF-8"/
         meta name="viewport" content="width=device-width, initial-scale=1.0"/
         title Document
-        link rel="stylesheet" href="./css/style.css"/
+        link rel="stylesheet" href="../css/style.css"/
     body 
         header 
             a href="/"
                 h1 Apotekaren
             a href="/"
                 button Home
-            a href="/login"
-                button Login
+            - if loggedIn()
+                a href="/logout"
+                    button Logout
+            - else
+                a href="/login"
+                    button Login
             a href="/cart"
                 button Cart
-            a href="/newmed"
-                button New med
             a href="/account"
                 button Account
+            - if isAdmin()
+                a href="/admin"
+                    button Admin
     ==yield
+    / footer
+    /     p &copy; 2025 Project25

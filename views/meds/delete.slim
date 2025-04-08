@@ -1,0 +1,8 @@
+div id="delete-medications"
+    h1 Medications
+    - meds.each do |med|
+        div class="medication-item"
+            p = "#{med["name"]}"
+            form action="/meds/delete" method="post"
+                input type="hidden" name="id" value="#{med["id"]}"
+                input type="submit" value="Remove"
