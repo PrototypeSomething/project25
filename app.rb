@@ -170,7 +170,7 @@ get ('/meds/delete') do
   isLoggedIn()
   if isAdmin()
     meds = fetch_all_meds()
-    slim(:"meds/delete", locals: { meds: meds })
+    slim(:"meds/delete", locals: { meds: meds }) 
   else
     redirect('/')
   end
@@ -189,6 +189,48 @@ post ('/meds/delete') do
   isLoggedIn()
   if isAdmin()
     delete_medication(params[:id])
+    redirect('/admin')
+  else
+    redirect('/')
+  end
+end
+
+## 
+# Displays the form to update a medication.
+# Fetches the medication details from the database.
+# Only accessible to admin users.
+#
+# @param [Integer] id The ID of the medication to update.
+# @return [String] Rendered Slim template for updating a medication.
+get ('/meds/update/:id') do
+  isLoggedIn()
+  if isAdmin()
+    med = fetch_medication(params[:id])
+    slim(:"meds/update", locals: { med: med })
+  else
+    redirect('/')
+  end
+end
+
+## 
+# Updates a medication in the database.
+# Only accessible to admin users.
+#
+# @param [Integer] id The ID of the medication to update.
+# @param [String] name The updated name of the medication.
+# @param [Integer] stock The updated stock quantity of the medication.
+# @param [String] description The updated description of the medication.
+# @param [Float] price The updated price of the medication.
+# @return [String] Redirects to the admin page after updating.
+post ('/meds/update/:id') do
+  isLoggedIn()
+  if isAdmin()
+    id = params[:id]
+    name = params[:name]
+    stock = params[:stock]
+    description = params[:description]
+    price = params[:price]
+    update_medication(id, name, stock, description, price)
     redirect('/admin')
   else
     redirect('/')

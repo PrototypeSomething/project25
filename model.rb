@@ -196,3 +196,26 @@ def process_purchase(meds, med_id)
   db = db_connection
   buy(db, meds, med_id)
 end
+
+## 
+# Fetches a specific medication from the database.
+#
+# @param [Integer] id The ID of the medication to fetch.
+# @return [Hash] The medication details.
+def fetch_medication(id)
+  db = db_connection
+  db.execute("SELECT * FROM meds WHERE id = ?", [id]).first
+end
+
+## 
+# Updates a medication in the database.
+#
+# @param [Integer] id The ID of the medication to update.
+# @param [String] name The updated name of the medication.
+# @param [Integer] stock The updated stock quantity of the medication.
+# @param [String] description The updated description of the medication.
+# @param [Float] price The updated price of the medication.
+def update_medication(id, name, stock, description, price)
+  db = db_connection
+  db.execute("UPDATE meds SET name = ?, stock = ?, description = ?, price = ? WHERE id = ?", [name, stock, description, price, id])
+end
