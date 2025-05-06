@@ -429,3 +429,143 @@ form input[type="submit"]:hover {
     background-color: #c0392b;
     transform: scale(1.05);
 }
+
+/* Update Medication Page Styles */
+#update-medication {
+    padding: 30px;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#update-medication h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+#update-medication form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#update-medication label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+#update-medication input[type="text"],
+#update-medication input[type="number"],
+#update-medication textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#update-medication input[type="text"]:focus,
+#update-medication input[type="number"]:focus,
+#update-medication textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#update-medication input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#update-medication input[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Update Medications Page Styles */
+#update-medications {
+    padding: 30px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#update-medications h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+#update-medications table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#update-medications table th,
+#update-medications table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#update-medications table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #555;
+}
+
+#update-medications table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#update-medications table tr:hover {
+    background-color: #f1f1f1;
+}
+
+#update-medications .action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#update-medications .action-buttons a,
+#update-medications .action-buttons form input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#update-medications .action-buttons a:hover,
+#update-medications .action-buttons form input[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+#update-medications .action-buttons form {
+    display: inline;
+}
