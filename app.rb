@@ -16,10 +16,8 @@ enable :sessions
 # @return [String] Rendered Slim template for the home page.
 get ('/') do
   isLoggedIn()
-  db = SQLite3::Database.new('db/db.db')
-  db.results_as_hash = true
-  meds = db.execute("SELECT * FROM meds")
-  cart = db.execute("SELECT * FROM cart")
+  meds = fetch_all_meds()
+  cart = fetch_user_cart()
   slim(:home, locals: { meds: meds, cart: cart })
 end
 
@@ -30,10 +28,8 @@ end
 # @return [String] Rendered Slim template for the cart page.
 get ('/cart') do
   isLoggedIn()
-  db = SQLite3::Database.new('db/db.db')
-  db.results_as_hash = true
-  meds = db.execute("SELECT * FROM meds")
-  cart = db.execute("SELECT * FROM cart")
+  meds = fetch_all_meds()
+  cart = fetch_user_cart()
   slim(:"cart/index", locals: { meds: meds, cart: cart })
 end
 
@@ -84,12 +80,10 @@ end
 # @return [String] Rendered Slim template for the admin panel.
 get ('/admin') do
   isLoggedIn()
-  db = SQLite3::Database.new('db/db.db')
-  db.results_as_hash = true
   if isAdmin()
-    meds = db.execute("SELECT * FROM meds")
-    cart = db.execute("SELECT * FROM cart")
-    users = db.execute("SELECT * FROM users")
+    meds = fetch_all_meds()
+    cart = fetch_all_cart_items()
+    users = fetch_all_users()
     slim(:"admin/index", locals: { meds: meds, cart: cart, users: users })
   else
     redirect('/')
@@ -103,9 +97,8 @@ end
 # @return [String] Rendered Slim template for the account page.
 get ('/account') do
   isLoggedIn()
-  db = SQLite3::Database.new('db/db.db')
-  meds = db.execute("SELECT * FROM meds")
-  previously_bought = db.execute("SELECT * FROM previously_bought")
+  meds = fetch_all_meds()
+  previously_bought = fetch_user_purchases()
   slim(:"/users/index", locals: { previously_bought: previously_bought, meds: meds })
 end
 
@@ -123,8 +116,7 @@ post('/users/new') do
   password_confirm = params[:password_confirm]
   if password == password_confirm
     password_digest = BCrypt::Password.create(password)
-    db = SQLite3::Database.new('db/db.db')
-    db.execute('INSERT INTO users (username, passw) VALUES (?, ?)', [username, password_digest])
+    create_user(username, password_digest)
     redirect('/')
   else
     "Passwords didn't match ):"
@@ -160,9 +152,7 @@ post ('/newmed/confirm') do
     stock = params[:stock]
     description = params[:description]
     price = params[:price]
-    db = SQLite3::Database.new('db/db.db')
-    db.results_as_hash = true
-    db.execute('INSERT INTO meds (name, stock, description, price) VALUES (?, ?, ?, ?)', [name, stock, description, price])
+    add_medication(name, stock, description, price)
   end
   redirect('/')
 end
@@ -179,11 +169,8 @@ end
 get ('/meds/delete') do
   isLoggedIn()
   if isAdmin()
-    db = SQLite3::Database.new('db/db.db')
-    db.results_as_hash = true
-    meds = db.execute('SELECT * FROM meds')
-    p meds
-    slim(:"meds/delete", locals: { meds: meds })
+    meds = fetch_all_meds()
+    slim(:"meds/delete", locals: { meds: meds }) 
   else
     redirect('/')
   end
@@ -201,10 +188,49 @@ end
 post ('/meds/delete') do
   isLoggedIn()
   if isAdmin()
-    db = SQLite3::Database.new('db/db.db')
-    db.results_as_hash = true
+    delete_medication(params[:id])
+    redirect('/admin')
+  else
+    redirect('/')
+  end
+end
+
+## 
+# Displays the form to update a medication.
+# Fetches the medication details from the database.
+# Only accessible to admin users.
+#
+# @param [Integer] id The ID of the medication to update.
+# @return [String] Rendered Slim template for updating a medication.
+get ('/meds/update/:id') do
+  isLoggedIn()
+  if isAdmin()
+    med = fetch_medication(params[:id])
+    slim(:"meds/update", locals: { med: med })
+  else
+    redirect('/')
+  end
+end
+
+## 
+# Updates a medication in the database.
+# Only accessible to admin users.
+#
+# @param [Integer] id The ID of the medication to update.
+# @param [String] name The updated name of the medication.
+# @param [Integer] stock The updated stock quantity of the medication.
+# @param [String] description The updated description of the medication.
+# @param [Float] price The updated price of the medication.
+# @return [String] Redirects to the admin page after updating.
+post ('/meds/update/:id') do
+  isLoggedIn()
+  if isAdmin()
     id = params[:id]
-    db.execute('DELETE FROM meds WHERE id = ?', [id])
+    name = params[:name]
+    stock = params[:stock]
+    description = params[:description]
+    price = params[:price]
+    update_medication(id, name, stock, description, price)
     redirect('/admin')
   else
     redirect('/')
@@ -221,18 +247,7 @@ end
 post ('/cart/add') do
   med_id = params[:id]
   number = params[:antal].to_i
-  db = SQLite3::Database.new('db/db.db')
-  db.results_as_hash = true
-  if number >= 0
-    number.times do
-      db.execute('INSERT INTO cart (user_id, med_id) VALUES (?, ?)', [session[:user_id], med_id])
-    end
-  else
-    duplicates = db.execute('SELECT id FROM cart WHERE user_id = ? AND med_id = ? LIMIT ?', [session[:user_id], med_id, number.abs])
-    duplicates.each do |row|
-      db.execute('DELETE FROM cart WHERE id = ?', [row['id'].to_i])
-    end
-  end
+  update_cart(session[:user_id], med_id, number)
   flash[:notice] = "Cart updated."
   redirect('/')
 end
@@ -247,7 +262,6 @@ end
 post ('/cart/buy') do
   meds = to_array(params[:antal])
   med_id = to_array(params[:med_id])
-  db = SQLite3::Database.new('db/db.db')
-  buy(db, meds, med_id)
+  process_purchase(meds, med_id)
   redirect('/cart')
 end

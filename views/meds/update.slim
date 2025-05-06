@@ -1,0 +1,16 @@
+div id="update-medication"
+    h1 Update Medication
+    form action="/meds/update/#{med['id']}" method="post"
+        label for="name" Name:
+        input type="text" name="name" id="name" value="#{med['name']}"
+        
+        label for="stock" Stock:
+        input type="number" name="stock" id="stock" value="#{med['stock']}"
+        
+        label for="description" Description:
+        textarea name="description" id="description" rows="4" cols="50" #{med['description']}
+        
+        label for="price" Price:
+        input type="number" step="0.01" name="price" id="price" value="#{med['price']}"
+        
+        input type="submit" value="Update Medication"

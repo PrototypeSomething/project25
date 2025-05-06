@@ -1,8 +1,46 @@
-div id="delete-medications"
-    h1 Medications
-    - meds.each do |med|
-        div class="medication-item"
-            p = "#{med["name"]}"
-            form action="/meds/delete" method="post"
-                input type="hidden" name="id" value="#{med["id"]}"
-                input type="submit" value="Remove"
+div id="update-medications"
+    h1 Update Medications
+    table
+        thead
+            tr
+                th Name
+                th Stock
+                th Description
+                th Price
+                th Actions
+        tbody
+            - meds.each do |med|
+                tr
+                    td = med['name']
+                    td = med['stock']
+                    td = med['description']
+                    td = med['price']
+                    td.action-buttons
+                        a href="/meds/update/#{med['id']}" Update
+                        form action="/meds/delete" method="post"
+                            input type="hidden" name="id" value=med['id']
+                            input type="submit" value="Delete"
+
+/ div id="delete-medications"
+/     h1 Manage Medications
+
+/     table
+/         thead
+/             tr
+/                 th Name
+/                 th Stock
+/                 th Description
+/                 th Price
+/                 th Actions
+/         tbody
+/             - meds.each do |med|
+/                 tr
+/                     td = med['name']
+/                     td = med['stock']
+/                     td = med['description']
+/                     td = med['price']
+/                     td
+/                         form action="/meds/delete" method="post" style="display:inline;"
+/                             input type="hidden" name="id" value=med['id']
+/                             input type="submit" value="Delete"
+/                         a href="/meds/update/#{med['id']}" Update
