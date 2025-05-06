@@ -1,3 +1,5 @@
+require 'sqlite3'
+
 # @!group Model
 
 ##
@@ -128,4 +130,69 @@ end
 #   isAdmin() # => true
 def isAdmin()
   return session[:admin] == true
+end
+
+def db_connection
+  db = SQLite3::Database.new('db/db.db')
+  db.results_as_hash = true
+  db
+end
+
+def fetch_all_meds
+  db = db_connection
+  db.execute("SELECT * FROM meds")
+end
+
+def fetch_user_cart
+  db = db_connection
+  db.execute("SELECT * FROM cart")
+end
+
+def fetch_all_cart_items
+  db = db_connection
+  db.execute("SELECT * FROM cart")
+end
+
+def fetch_all_users
+  db = db_connection
+  db.execute("SELECT * FROM users")
+end
+
+def fetch_user_purchases
+  db = db_connection
+  db.execute("SELECT * FROM previously_bought")
+end
+
+def create_user(username, password_digest)
+  db = db_connection
+  db.execute('INSERT INTO users (username, passw) VALUES (?, ?)', [username, password_digest])
+end
+
+def add_medication(name, stock, description, price)
+  db = db_connection
+  db.execute('INSERT INTO meds (name, stock, description, price) VALUES (?, ?, ?, ?)', [name, stock, description, price])
+end
+
+def delete_medication(id)
+  db = db_connection
+  db.execute('DELETE FROM meds WHERE id = ?', [id])
+end
+
+def update_cart(user_id, med_id, number)
+  db = db_connection
+  if number >= 0
+    number.times do
+      db.execute('INSERT INTO cart (user_id, med_id) VALUES (?, ?)', [user_id, med_id])
+    end
+  else
+    duplicates = db.execute('SELECT id FROM cart WHERE user_id = ? AND med_id = ? LIMIT ?', [user_id, med_id, number.abs])
+    duplicates.each do |row|
+      db.execute('DELETE FROM cart WHERE id = ?', [row['id'].to_i])
+    end
+  end
+end
+
+def process_purchase(meds, med_id)
+  db = db_connection
+  buy(db, meds, med_id)
 end
